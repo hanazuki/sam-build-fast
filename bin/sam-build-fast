@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+=begin
+sam-build-fast - fast alternative for `sam build`
+=end
+
+require_relative '../lib/sam-build-fast/cli'
+
+SamBuildFast::Cli.new.run(ARGV)
