@@ -22,12 +22,20 @@ module SamBuildFast
         self.class.const_get(:NO_COPY)
       end
 
+      def copy_destination_path
+        "."
+      end
+
       def build_env
         {}
       end
 
       def build_command
         fail "#{self.class}#build_command is not implemented."
+      end
+
+      def artifact_path
+        '.'
       end
 
       private
@@ -48,20 +56,30 @@ module SamBuildFast
           BUNDLE_PATH: 'vendor/bundle',
           BUNDLE_GLOBAL_GEM_CACHE: true,
           BUNDLE_USER_CACHE: cache_dir + 'bundler',
+          BUNDLE_JOBS: 2,
         }
       end
 
       def build_command
         <<EOF
 cd #{shellescape(build_dir)}
-bundle install
+GNUMAKEFLAGS="-j$(nproc)" bundle install
 EOF
       end
     end
 
+    # Not tested
     class NodeNpm < Base
       DO_COPY = true
       NO_COPY = %w[node_modules]
+
+      def copy_destination_path
+        'packaging'
+      end
+
+      def artifact_path
+        'artifact'
+      end
 
       def build_env
         {
@@ -72,11 +90,25 @@ EOF
       def build_command
         <<EOF
 cd #{shellescape(build_dir)}
-npm install --no-audit
+rm -rf tmp artifact.old
+mv -f artifact artifact.old
+mkdir -p tmp artifact
+
+pushd tmp
+npm pack ../packaging
+popd
+
+pushd artifact
+tar vxf ../tmp/*.tgz --strip-components=1
+if test -d ../artifact.old/node_modules; then
+  mv -f ../artifact.old/node_modules .
+fi
+npm install --no-audit --production
 EOF
       end
     end
 
+    # Not tested
     class NodeYarn < NodeNpm
       def build_env
         super.merge(

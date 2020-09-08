@@ -1,5 +1,3 @@
-require_relative 'workflow'
-
 require 'ostruct'
 require 'pathname'
 require 'digest/sha2'
@@ -14,25 +12,32 @@ module SamBuildFast
         fail "TODO"
       end
 
-      self.workflow = Workflow.get(runtime, code_uri)
+      self.workflow = Workflow.get(runtime, code_uri).new(
+        source_dir: '/sam-build/source',
+        build_dir: '/sam-build/build',
+        cache_dir: '/sam-build/cache',
+      )
 
       seeds = [runtime, code_uri]
       self.code_id = Digest::SHA256.hexdigest(seeds.map(&:to_s).join(?\0))
+
+      self.artifact_path = "#{code_id}/#{workflow.artifact_path}"
     end
 
   end
 
   class Builder
-    def initialize(base_dir:, build_dir:, cache_dir:)
+    def initialize(base_dir:, build_dir:, cache_dir:, skip_pull_image: false)
       @base_dir = Pathname(base_dir)
       @build_dir = Pathname(build_dir)
       @cache_dir = Pathname(cache_dir)
+      @skip_pull_image = skip_pull_image
+
+      @pulled_images = {}
     end
 
     def build(template, function_ids)
       functions = extract_functions(template)
-
-      pp template
 
       jobs_done = {}
       functions.each do |id, function|
@@ -48,6 +53,7 @@ module SamBuildFast
         end
 
         build_function(id, function)
+
         jobs_done[function.code_id] = id
       end
 
@@ -74,7 +80,7 @@ module SamBuildFast
           )
         end
 
-        props['CodeUri'] = fun.code_id
+        props['CodeUri'] = fun.artifact_path
       end
     end
 
@@ -82,11 +88,7 @@ module SamBuildFast
       job_build_dir = @build_dir.join(function.code_id).tap(&:mkpath)
       job_source_dir = function.code_uri
 
-      workflow = function.workflow.new(
-        source_dir: '/sam-build/source',
-        build_dir: '/sam-build/build',
-        cache_dir: '/sam-build/cache',
-      )
+      workflow = function.workflow
 
       if workflow.copy_files?
         rsync_opts = %w[-a --delete]
@@ -94,7 +96,8 @@ module SamBuildFast
           rsync_opts.push('--exclude', path)
         end
 
-        system(*['rsync', *rsync_opts, "#{job_source_dir}/", "#{job_build_dir}/"], exception: true)
+        copy_destination = job_build_dir.join(workflow.copy_destination_path).tap(&:mkpath)
+        system(*['rsync', *rsync_opts, "#{job_source_dir}/", "#{copy_destination}/"], exception: true)
       end
 
       docker_image = "lambci/lambda:build-#{function.runtime}"
@@ -109,6 +112,12 @@ module SamBuildFast
       workflow.build_env.each do |k, v|
         docker_run_opts.push('-e', "#{k}=#{v}")
       end
+
+      unless @skip_pull_image && !@pulled_images[docker_image]
+        system(*['docker', 'pull', docker_image], exception: true)
+        @pulled_images[docker_image] = true
+      end
+
       system(*['docker', 'run', *docker_run_opts, docker_image, '/bin/bash', '-euxc', workflow.build_command], exception: true)
     end
   end

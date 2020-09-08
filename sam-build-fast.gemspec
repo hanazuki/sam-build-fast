@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = %q{A fast alternative for `sam build`}
   spec.description = %q{A fast alternative for `sam build`}
-  spec.homepage = 'http://github.com/hanazuki/sam-build-fast'
+  spec.homepage = 'https://github.com/hanazuki/sam-build-fast'
   spec.license = 'MIT'
 
   spec.metadata['homepage_uri'] = spec.homepage

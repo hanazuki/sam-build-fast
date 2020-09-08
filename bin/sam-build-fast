@@ -3,6 +3,6 @@
 sam-build-fast - fast alternative for `sam build`
 =end
 
-require_relative '../lib/sam-build-fast/cli'
+require_relative '../lib/sam-build-fast'
 
-SamBuildFast::Cli.new.run(ARGV)
+SamBuildFast::Command.run_cli(ARGV)

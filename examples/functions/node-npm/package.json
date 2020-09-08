@@ -1,6 +1,17 @@
 {
+    "name": "node-npm-example",
+    "version": "1.0.0",
     "private": true,
+    "scripts": {
+        "prepack": "tsc"
+    },
     "dependencies": {
-        "webpack": "*"
-    }
+        "express": "*"
+    },
+    "devDependencies": {
+        "typescript": "*"
+    },
+    "files": [
+        "*.js"
+    ]
 }
