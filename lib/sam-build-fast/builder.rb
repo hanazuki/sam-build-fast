@@ -78,9 +78,8 @@ module SamBuildFast
             runtime: props.fetch('Runtime'),
             handler: props.fetch('Handler'),
           )
+          props['CodeUri'] = fun.artifact_path
         end
-
-        props['CodeUri'] = fun.artifact_path
       end
     end
 
