@@ -4,6 +4,7 @@ module SamBuildFast
   class Command
     Options = Struct.new(
       :base_dir,
+      :output_dir,
       :build_dir,
       :cache_dir,
       :template_file,
@@ -26,7 +27,7 @@ module SamBuildFast
         options = Options.new
 
         parser = OptionParser.new
-        parser.on('-b DIRECTORY', '--build-dir') {|v| options.build_dir = v }
+        parser.on('-o DIRECTORY', '--output-dir') {|v| options.output_dir = v }
         parser.on('-s DIRECTORY', '--base-dir') {|v| options.base_dir = v }
         parser.on('--cache-dir DIRECTORY') {|v| options.cache_dir = v }
         parser.on('-t PATH', '--template', '--template-file') {|v| options.template_file = v }
@@ -47,8 +48,9 @@ module SamBuildFast
 
       options.template_file ||= find_template_file
       options.base_dir ||= File.expand_path('..', options.template_file)
-      options.build_dir ||= File.expand_path('../.aws-sam/build', options.template_file)
-      options.cache_dir ||= File.expand_path('../.aws-sam/cache', options.template_file)
+      options.output_dir ||= FIle.expand_path('../.aws-sam', options.template_file)
+      options.build_dir ||= File.join(options.output_dir, 'build')
+      options.cache_dir ||= File.join(options.output_dir, 'cache')
     end
 
     attr_reader :options
