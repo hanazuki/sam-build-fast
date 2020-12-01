@@ -69,7 +69,7 @@ module SamBuildFast
 
       resources.each_with_object({}) do |(id, params), functions|
         type = params.fetch('Type')
-        props = params.fetch('Properties')
+        next unless props = params['Properties']
 
         case type
         when 'AWS::Serverless::Function'
