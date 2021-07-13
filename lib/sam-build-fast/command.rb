@@ -48,7 +48,7 @@ module SamBuildFast
 
       options.template_file ||= find_template_file
       options.base_dir ||= File.expand_path('..', options.template_file)
-      options.output_dir ||= FIle.expand_path('../.aws-sam', options.template_file)
+      options.output_dir ||= File.expand_path('../.aws-sam', options.template_file)
       options.build_dir ||= File.join(options.output_dir, 'build')
       options.cache_dir ||= File.join(options.output_dir, 'cache')
     end
