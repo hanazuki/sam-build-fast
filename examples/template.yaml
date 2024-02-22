@@ -27,27 +27,3 @@ Resources:
       Handler: handler.main
       Runtime: ruby3.2
       Timeout: 10000
-
-  Node12:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: functions/node-npm/
-      Handler: handler.main
-      Runtime: nodejs12.x
-      Timeout: 10000
-
-  Node10:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: functions/node-npm/
-      Handler: handler.main
-      Runtime: nodejs10.x
-      Timeout: 10000
-
-  Node12Yarn:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: functions/node-yarn/
-      Handler: handler.main
-      Runtime: nodejs12.x
-      Timeout: 10000

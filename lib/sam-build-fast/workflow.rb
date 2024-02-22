@@ -5,16 +5,10 @@ module SamBuildFast
     RUBY_WORKFLOWS = {
       '.' => Workflows::RubyBundler,
     }
-    NODEJS_WORKFLOWS = {
-      'yarn.lock' => Workflows::NodeYarn,
-      '.' => Workflows::NodeNpm,
-    }
 
     WORKFLOWS = {
       'ruby2.7' => RUBY_WORKFLOWS,
       'ruby3.2' => RUBY_WORKFLOWS,
-      'nodejs10.x' => NODEJS_WORKFLOWS,
-      'nodejs12.x' => NODEJS_WORKFLOWS,
     }
 
     def self.get(runtime, source_dir)
