@@ -4,7 +4,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: Morupara
 
 Resources:
-  Ruby1:
+  Ruby2_5:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/ruby/
@@ -12,20 +12,20 @@ Resources:
       Runtime: ruby2.5
       Timeout: 10000
 
-  Ruby2:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: functions/ruby/
-      Handler: handler.main
-      Runtime: ruby2.5
-      Timeout: 10000
-
-  Ruby3:
+  Ruby2_7:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/ruby/
       Handler: handler.main
       Runtime: ruby2.7
+      Timeout: 10000
+
+  Ruby3_2:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/ruby/
+      Handler: handler.main
+      Runtime: ruby3.2
       Timeout: 10000
 
   Node12:

@@ -11,8 +11,8 @@ module SamBuildFast
     }
 
     WORKFLOWS = {
-      'ruby2.5' => RUBY_WORKFLOWS,
       'ruby2.7' => RUBY_WORKFLOWS,
+      'ruby3.2' => RUBY_WORKFLOWS,
       'nodejs10.x' => NODEJS_WORKFLOWS,
       'nodejs12.x' => NODEJS_WORKFLOWS,
     }

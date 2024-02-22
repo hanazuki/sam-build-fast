@@ -99,7 +99,7 @@ module SamBuildFast
         system(*['rsync', *rsync_opts, "#{job_source_dir}/", "#{copy_destination}/"], exception: true)
       end
 
-      docker_image = "amazon/aws-sam-cli-build-image-#{function.runtime}"
+      docker_image = "public.ecr.aws/sam/build-#{function.runtime}"
       docker_run_opts =
         %W[
            --rm
