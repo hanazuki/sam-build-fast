@@ -1,6 +1,6 @@
 require 'bundler/setup'
-require 'rails'
+require 'nokogiri'
 
 def main(*)
-  puts "We have rails #{Rails::VERSION::STRING}."
+  puts "We have #{RUBY_DESCRIPTION} and nokogiri #{Nokogiri::VERSION}."
 end

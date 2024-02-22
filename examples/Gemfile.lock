@@ -1,0 +1,20 @@
+PATH
+  remote: ..
+  specs:
+    sam-build-fast (0.0.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (13.1.0)
+
+PLATFORMS
+  ruby
+  x86_64-linux
+
+DEPENDENCIES
+  rake
+  sam-build-fast!
+
+BUNDLED WITH
+   2.5.5

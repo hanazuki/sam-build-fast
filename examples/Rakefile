@@ -1,0 +1,5 @@
+require 'sam-build-fast/rake'
+
+SamBuildFast::Rake.define(:sam)
+
+task :default => :'sam:build'
