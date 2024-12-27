@@ -9,6 +9,7 @@ module SamBuildFast
     WORKFLOWS = {
       'ruby2.7' => RUBY_WORKFLOWS,
       'ruby3.2' => RUBY_WORKFLOWS,
+      'ruby3.3' => RUBY_WORKFLOWS,
     }
 
     def self.get(runtime, source_dir)
