@@ -1,29 +1,29 @@
-require 'ostruct'
 require 'pathname'
 require 'digest/sha2'
 require 'yaml'
 
 module SamBuildFast
-  class Function < OpenStruct
-    def initialize(*)
-      super
+  class Function
+    def initialize(code_uri:, runtime:, handler:)
+      @code_uri = code_uri
+      @runtime = runtime
+      @handler = handler
 
-      unless self.code_uri.directory?
+      unless code_uri.directory?
         fail "TODO"
       end
 
-      self.workflow = Workflow.get(runtime, code_uri).new(
+      @workflow = Workflow.get(runtime, code_uri).new(
         source_dir: '/sam-build/source',
         build_dir: '/sam-build/build',
         cache_dir: '/sam-build/cache',
       )
-
-      seeds = [runtime, code_uri]
-      self.code_id = Digest::SHA256.hexdigest(seeds.map(&:to_s).join(?\0))
-
-      self.artifact_path = "#{code_id}/#{workflow.artifact_path}"
     end
 
+    attr_reader :code_uri, :runtime, :handler, :workflow, :code_id
+
+    def artifact_path = "#{code_id}/#{workflow.artifact_path}"
+    def code_id = Digest::SHA256.hexdigest([runtime, code_uri].map(&:to_s).join(?\0))
   end
 
   class Builder
